@@ -1,0 +1,36 @@
+// multi terms ir input
+// POST(json) / GET(parameters)  /query
+// POST method
+{
+    "id": "IR02001",
+    "query": "额定容量 温升限值"
+}
+// GET method
+http://ip:port?id=IR02001&query=额定容量 温升限值
+
+//multi terms ir output
+{
+    "id": "IR02001",
+    "status":"OK", // ok or error
+    "query":"额定容量 温升限值",
+    "type":"多信息检索",
+    "results":[
+        {
+            "rank":1,
+            "snippet":"6.2 额定容量下的温升限值
+            对于分接范围不超过士5%，且额定容量不超过2500kVA（单相833kVA）的变压器，温升限值适用于与额定电压对应的主分接(见GB 1094.1)。",
+            "technology_standard_code":"GB 1094.2-2013",
+            "technology_standard_name":"电力变压器 第2部分：液浸式变压器的温升",
+            "technology_standard_subtitle":"6.2"
+        },
+        {
+            "rank":2,
+            "snippet":"10.6.1 在额定电压、额定持续中性点电流和额定二次绕组容量下的温升
+            如果变压器有二次绕组，则变压器在二次绕组额定容量下不应超过温升限值。或当规定了持续中性点电流时，在二次绕组额定容量和持续中性点电流组合作用下不应超过温升限值。",
+            "technology_standard_code":"GB/T 1094.6-2011",
+            "technology_standard_name":"电力变压器 第6部分：电抗器",
+            "technology_standard_subtitle":"10.6.1"
+        }
+    ],
+    "company":"XXX公司"
+}

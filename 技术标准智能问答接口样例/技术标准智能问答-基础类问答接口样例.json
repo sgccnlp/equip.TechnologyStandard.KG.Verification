@@ -1,0 +1,66 @@
+// 基础类问答输入
+// sample 1
+//input 
+// POST method
+{
+    "id": "QA01001",
+    "question":"新投运的220kV变压器，在施加电压前静止时间应不少于多少小时？",
+    "answer_type":"数字类"
+}
+// GET method
+http://ip:port?id=QA01001&anwser_type=数字类&question=新投运的220kV变压器，在施加电压前静止时间应不少于多少小时？
+
+//output
+{
+    "id": "QA01001",
+    "status":"OK", //ok or error
+    "question":"新投运的220kV变压器，在施加电压前静止时间应不少于多少小时？",
+    "results":
+    [
+        {
+            "answer_type":"数字类",
+            "answer": {
+                "num": 48,
+                "unit": "小时",
+            },
+            "technology_standard_code":"GB 50150-2016",
+            "technology_standard_name":"电气装置安装工程电气设备交接试验标准",
+            "technology_standard_subtitle":["3.0.3"],
+            "technology_standard_ref":["3.0.3  油浸式变压器及电抗器的绝缘试验应在充满合格油，静置一定时间，待气泡消除后方可进行。静置时间应按制造厂规定执行，当制造厂无规定时，油浸式变压器及电抗器电压等级与充油后静置时间关系应按表 3.0.3 确定。
+            表 3. 0. 3  油浸式变压器及电抗器电压等级与充油后静置时间关系
+            ≥48"]   
+        }
+    ],
+    "company":"XXX公司"
+}
+
+//  sample 2
+//  input 
+//  POST method
+{
+    "id": "QA01002",
+    "question":"易损件的更换周期要求是什么？",
+    "answer_type":"抽取类"
+}
+//  GET method
+http://ip:port?id=QA01002&answer_type=抽取类&question=易损件的更换周期要求是什么？
+
+//output
+{
+    "id": "QA01002",
+    "status":"OK", //ok or error
+    "question":"易损件的更换周期要求是什么？",
+    "results":
+    [
+        {
+            "answer_type":"抽取类",
+            "answer":"使用10年以上的油泵轴承或冷却风扇轴承运行中发岀不正常的噪声时,在变压器或并联电抗器退出 运行时予以更换：使用15年以上时，根据具体情况更换所有密封垫。",
+            "technology_standard_code":"DL/T 1176-2012",
+            "technology_standard_name":"1000kV油浸式变压器、并联电抗器运行及维护规程",
+            "technology_standard_subtitle":["5.16"],
+            "technology_standard_ref":["5.16易损件的更换周期
+            使用10年以上的油泵轴承或冷却风扇轴承运行中发岀不正常的噪声时,在变压器或并联电抗器退出运行时予以更换；使用15年以上时，根据具体情况更换所有密封垫。"]   
+        }
+    ],
+    "company":"XXX公司"
+}

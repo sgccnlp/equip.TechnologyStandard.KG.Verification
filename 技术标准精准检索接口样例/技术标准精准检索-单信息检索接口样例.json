@@ -1,0 +1,42 @@
+//single term ir input
+// POST(json) / GET(parameters)  /query
+// POST method
+{
+    "id": "IR01001",
+    "query": "专业巡检"
+}
+// GET method
+http://ip:port?id=IR01001&query=专业巡检
+
+//single term ir output
+{
+    "id": "IR01001", 
+    "status":"OK", // ok or error
+    "query":"专业巡检",
+    "type":"单信息检索",
+    "results":[
+        {
+            "rank":1,
+            "snippet":"3.3 专业巡检 specialty inspection 为由专业技术人员对设备开展常规巡视以及借助各种先进检测仪器、装备对设备开展的带电检测与 诊断。",
+            "technology_standard_code":"Q/GDW 11085-2013",
+            "technology_standard_name":"油浸式电力变压器（电抗器）技术监督导则",
+            "technology_standard_subtitle":"3.3"
+        },
+        {
+            "rank":2,
+            "snippet":"8.6 变压器例行/诊断性试验、检修（包括专业巡检、带电检测）、改造等记录应及时录入生产管理信息系统并归档，例行/诊断性试验报告、检修报告必须严格履行审批手续。",
+            "technology_standard_code":"Q/GDW 11085-2013",
+            "technology_standard_name":"油浸式电力变压器（电抗器）技术监督导则",
+            "technology_standard_subtitle":"8.6"
+        },
+        {
+            "rank":3,
+            "snippet":"7 检修类别 
+            表2 油浸式变压器 (电抗器)检修类别与检修内容对应表",
+            "technology_standard_code":"DL/T 1684-2017",
+            "technology_standard_name":"油浸式变压器（电抗器）状态检修导则",
+            "technology_standard_subtitle":"7"
+        },
+    ],
+    "company":"XXX公司"
+}

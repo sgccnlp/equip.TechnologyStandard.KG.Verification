@@ -1,0 +1,36 @@
+
+// related terms ir input
+// POST(json) / GET(parameters)  /query
+// POST method
+{
+    "id": "IR03001",
+    "query": "有载分接开关的型式试验项目"
+}
+// GET method
+http://ip:port?id=IR03001&query=有载分接开关的型式试验项目
+
+
+//related terms ir output
+{
+    "status":"OK", // ok or error
+    "query":"有载分接开关的型式试验项目",
+    "type":"关联信息检索",
+    "id": "IR03001",
+    "results":[
+        {
+            "rank":1,
+            "snippet":"5.2 型式试验
+            下列型式试验是在相关的有载分接开关的最终研制的样品上或等效的组成部件上进行的。所谓等效的组成部件是指制造单位已表明只用这些组成部件替代完整的有载分接开关后，其试验条件及试验结果不受影响。
+            —触头温升试验(见5.2.1);
+            —切换试验(见5.2.2);
+            —短路电流试验(见5.2.3);
+            —过渡阻抗试验(见5.2.4);
+            —机械试验(见5.2.5);
+            —绝缘试验(见5.2.6)。",
+            "technology_standard_code":"GB 10230.1-2007",
+            "technology_standard_name":"分接开关 第1部分：性能要求和试验方法",
+            "technology_standard_subtitle":"5.2"
+        }
+    ],
+    "company":"XXX公司"
+}

@@ -1,0 +1,82 @@
+//  sample 1
+//  input
+//  POST method
+{
+    "id": "QA03001",
+    "question":"750kV油浸式变压器换油后静止72h是否满足要求？",
+    "answer_type":"判断类"
+}
+// GET method
+http://ip:port?id=QA03001&answer_type=判断类&question=750kV油浸式变压器换油后静止72h是否满足要求？
+
+//  output
+{
+    "id": "QA03001",
+    "status":"OK", //ok or error
+    "question":"750kV油浸式变压器换油后静止72h是否满足要求？",
+    "results":[
+        {
+            "answer_type":"判断类",
+            "answer": {
+                "judgement": "否",
+                "argument": "96h"
+                },  // 答案为一个数组，第一个元素表示正误的判断，只能回答“是”或“否”，第二个元素为判断依据
+            "technology_standard_code":"DL/T 572-2010",
+            "technology_standard_name":"电力变压器运行规程",
+            "technology_standard_subtitle":["5.2.6"],
+            "technology_standard_ref":["新装、大修、事故检修或换油后的变压器，在施加电压前静止时间不应少于以下规定：
+            a）110kV 24h
+            b）220kV 48h
+            c）500（330）kV 72h
+            d）750kV 96h"]
+        }
+    ],
+    "company":"XXX公司"
+}
+
+//  sample 2
+//  input
+//  POST method
+{
+    "id": "QA03002",
+    "question":"容量为1600kVA及以下油浸式电力变压器交接试验时开展哪些试验项目？",
+    "answer_type":"抽取类"
+}
+//  GET method
+http://ip:port?id=QA03002&answer_type=抽取类question=容量为1600kVA及以下油浸式电力变压器交接试验时开展哪些试验项目？
+
+//  output
+{
+    "id": "QA03002",
+    "status":"OK", //ok or error
+    "question":"容量为1600kVA及以下油浸式电力变压器交接试验时开展哪些试验项目？",
+    "results":[
+        {
+            "answer_type":"抽取类",
+            "answer": "1 绝缘油试验或SF6 气体试验;2 测量绕组连同套管的直流电阻;3 检查所有分接的电压比;4 检查变压器的二相接线组别和单相变压器引出线的极性;5 测量铁心及夹件的绝缘电阻;6 非纯瓷套管的试验;7 有载调压切换装置的检查和试验;8 测量绕组连同套管的绝缘电阻、吸收比或极化指数;9 绕组连同套管的交流耐压试验;10 额定电压下的冲击合闸试验;11 检查相位;",
+            "technology_standard_code":"GB 50150-2016",
+            "technology_standard_name":"电气装置安装工程电气设备交接试验标准",
+            "technology_standard_subtitle":["8.0.1","8.0.2"],
+            "technology_standard_ref":["8.0.1 电力变压器的试验项目，应包括下列内容:
+            1 绝缘油试验或SF6 气体试验;
+            2 测量绕组连同套管的直流电阻;
+            3 检查所有分接的电压比;
+            4 检查变压器的二相接线组别和单相变压器引出线的极性;
+            5 测量铁心及夹件的绝缘电阻;
+            6 非纯瓷套管的试验;
+            7 有载调压切换装置的检查和试验;
+            8 测量绕组连同套管的绝缘电阻、吸收比或极化指数;
+            9 测量绕组连同套管的介质损耗因数( tanO')与电容量;
+            10 变压器绕组变形试验;
+            11 绕组连同套管的交流耐压试验;
+            12 绕组连同套管的长时感应耐压试验带局部放电测量;
+            13 额定电压下的冲击合闸试验;
+            14 检查相位;
+            15 测量噪音。
+            ","8. 0. 2 各类变压器试验项目应符合下列规定:
+            1 容量为1600kVA 及以下油浸式电力变压器，可按本标准第8. 0. 1 条第1、2、3、4、5、6、 7、8、11、13 和14 款进行试验;"]
+        }
+
+    ],
+    "company":"XXX公司"
+}
