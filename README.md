@@ -79,3 +79,15 @@
 ```
 # 各家反馈答复详见
 http://verification.rises.tech/notify
+
+#   容器部署规则
+为避免厂商比赛时镜像重名，导致覆盖，要求各厂商镜像命名格式如下：
+```text
+    equipment-编号-镜像名
+```
+    编号由组织方给定
+    镜像名自行命名
+厂商容器名格式如下：
+```buildoutcfg
+    equipment-编号-容器名
+```
