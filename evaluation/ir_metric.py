@@ -9,7 +9,7 @@ import copy
 FAULT_ID = "-1"
 
 
-class IEMetric:
+class IRMetric:
     """
     做检索评分的时候，有一个基本假设:
     对于同一个query给出的refs，任意两个refs不能具有相同的条款号(technology_standard_subtitle)。
@@ -240,9 +240,9 @@ class IEMetric:
 
 
 if __name__ == "__main__":
-    ref_file = "data/data/ie/refs.json"
-    hyp_file = "data/data/ie/hyps.json"
-    metric = IEMetric(ref_file)
+    ref_file = "data/ir/refs.json"
+    hyp_file = "data/ir/hyps.json"
+    metric = IRMetric(ref_file)
     with open(hyp_file) as fp:
         for line in fp:
             scores = metric.get_scores(line)

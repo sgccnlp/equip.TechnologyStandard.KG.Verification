@@ -13,9 +13,7 @@ from typing import Tuple, List, Dict
 from helper import rouge_score, preprocess_text, tokenize, snippet_projection, do_subtitle_format, do_code_to_index, argument_empty_process
 import json
 
-
 FAULT_ID = "-1"
-
 
 class QAMetric:
     def __init__(self, ref_file):
@@ -256,8 +254,8 @@ class QAMetric:
         return n_right / n_kwargs
 
 if __name__ == "__main__":
-    hyp_file = 'data/data/qa/hyp.json'
-    ref_file = 'data/data/qa/ref.json'
+    hyp_file = 'data/qa/hyps.json'
+    ref_file = 'data/qa/refs.json'
 
     qa_metric = QAMetric(ref_file)
     with open(hyp_file) as fp:

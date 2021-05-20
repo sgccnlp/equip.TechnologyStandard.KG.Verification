@@ -1,5 +1,4 @@
 from typing import List, Dict
-
 from rouge import Rouge
 
 import numpy as np
@@ -14,7 +13,7 @@ PUNCTIONS = [
     "|", "\\", "?", "`", "~"
 ]
 
-code_to_index = json.load(open("data/data/code_to_index.json"))
+code_to_index = json.load(open("config/code_to_index.json"))
 
 
 def do_code_to_index(code):

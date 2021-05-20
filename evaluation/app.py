@@ -1,23 +1,23 @@
 from flask import Flask, request
 import json
-from ie_metric import IEMetric
+from ir_metric import IRMetric
 from qa_metric import QAMetric
 
 
-ie_ref_file = "data/data/ie/refs.json"
-qa_ref_file = "data/data/qa/ref.json"
+ir_ref_file = "data/ir/refs.json"
+qa_ref_file = "data/qa/refs.json"
 
-ie_metric = IEMetric(ie_ref_file)
+ir_metric = IRMetric(ir_ref_file)
 qa_metric = QAMetric(qa_ref_file)
 
 
 app = Flask(__name__)
 
 
-@app.route("/ie", methods=["POST"])
-def ie():
+@app.route("/ir", methods=["POST"])
+def ir():
     a = request.get_data()
-    results = ie_metric.get_scores(a)
+    results = ir_metric.get_scores(a)
     return json.dumps(results, ensure_ascii=False)
 
 
