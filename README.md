@@ -93,5 +93,6 @@ http://verification.rises.tech/notify
 ```
 
 #   评测脚本
-评测脚本工程在 /evaluation内
+评测脚本工程在 /evaluation 目录内
+
 详见 [评测脚本说明](evaluation/README.md)
