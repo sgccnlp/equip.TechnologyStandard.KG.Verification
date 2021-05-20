@@ -1,4 +1,4 @@
-# 电网设备技术标准精准检索与智能问答评测脚本
+# 电网设备技术标准精准检索与智能问答评测脚本说明
 ## 环境配置
 python3.6
 
@@ -48,7 +48,7 @@ print(r.text)
 ```
 
 ## 备注
-有疑问请联系开发者
+有疑问请联系开发者　或直接在 issue里提问
 
 @宋博川 [songbochuan@geiri.sgcc.com.cn](songbochuan@geiri.sgcc.com.cn)
 
