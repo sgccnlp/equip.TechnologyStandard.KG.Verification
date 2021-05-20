@@ -92,6 +92,6 @@ http://verification.rises.tech/notify
     equipment-编号-容器名
 ```
 
-#　评测脚本
+#   评测脚本
 
 详见 [评测脚本说明](evaluation/README.md)
