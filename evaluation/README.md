@@ -31,7 +31,7 @@ python3.6
 import requests
 
 url = "http://127.0.0.1:5000/ir"
-fp = open('data/data/ir/hyps.json')
+fp = open('data/ir/hyps.json')
 line = fp.readline()
 r = requests.post(url, data=line.encode('utf8'))
 print(r.text)
@@ -41,7 +41,7 @@ print(r.text)
 import requests
 
 url = "http://127.0.0.1:5000/qa"
-fp = open('data/data/qa/hyps.json')
+fp = open('data/qa/hyps.json')
 line = fp.readline()
 r = requests.post(url, data=line.encode('utf8'))
 print(r.text)
