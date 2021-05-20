@@ -91,3 +91,6 @@ http://verification.rises.tech/notify
 ```buildoutcfg
     equipment-编号-容器名
 ```
+
+#　评测脚本
+详见 [评测脚本](evaluation/README.md)
