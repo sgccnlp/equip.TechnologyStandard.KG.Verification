@@ -1,0 +1,18 @@
+{
+  "id": "extr0001",
+  "track": 1002,
+  "question_type": "基础类",
+  "question": "有载分接开关的型式试验",
+  "answer_type": "抽取类",
+  "results": [
+    {
+      "answer": null,
+      "technology_standard_code": "GB/T 10230.1-2007",
+      "technology_standard_name": "分接开关第1部分：性能要求和试验方法",
+      "technology_standard_subtitle": [
+        "5.2"
+      ],
+      "answer_type": "抽取类"
+    }
+  ]
+}

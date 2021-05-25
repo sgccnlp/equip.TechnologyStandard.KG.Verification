@@ -3,8 +3,9 @@ from typing import Tuple, List, Dict
 import json
 import numpy as np
 from rouge import Rouge
-from helper import rouge_score, preprocess_text, tokenize, snippet_projection, do_code_to_index, do_subtitle_format, argument_empty_process
+from helper import rouge_score, snippet_projection, do_code_to_index, do_subtitle_format, argument_empty_process, generate_rouge_text
 import copy
+from itertools import permutations, combinations
 
 FAULT_ID = "-1"
 
@@ -24,7 +25,8 @@ class IRMetric:
 
     
     """
-    def __init__(self, ref_file):
+    def __init__(self, ref_file, debug=False):
+        self.debug = debug
         self.rouge = Rouge(exclusive=False)
         self.refs = {}
         with open(ref_file, encoding='utf8') as fp:
@@ -36,11 +38,20 @@ class IRMetric:
     def get_scores(self, hyp):
         hyp = json.loads(hyp)
         refs = self.refs
-
-        scores, matched_snippets = self._get_scores(hyp, refs)
-        if matched_snippets == {}:
-            matched_snippets = []
-        return {"score": scores, "matched_snippets": matched_snippets}
+        if not self.debug:
+            try:
+                scores, matched_snippets = self._get_scores(hyp, refs)
+                if matched_snippets == {}:
+                    matched_snippets = []
+                return {"score": scores, "matched_snippets": matched_snippets}
+            except:
+                scores = {"recall": 0, "mrr": 0, "rouge": 0, "total": 0}
+                return {"score": scores, "matched_snippets": []}
+        else:
+            scores, matched_snippets = self._get_scores(hyp, refs)
+            if matched_snippets == {}:
+                matched_snippets = []
+            return {"score": scores, "matched_snippets": matched_snippets}
 
     def _get_scores(self, hyp, refs):
         ref = refs.get(hyp["id"], None)
@@ -53,7 +64,7 @@ class IRMetric:
         return {"recall": recall, "mrr": mrr, "rouge": rouge, "total": total}, matched_snippets
 
     def _get_query_score(self, hyps, refs):
-        """对一个query的hyp和ref进行评分, 同时返回relative_matrix用于计算snippet对照。
+        """对一个query的hyp和ref进行评分, 同时返回projection用于计算snippet对照。
         """
         hyps = hyps['results']
         if hyps is None or not isinstance(hyps, list):
@@ -71,14 +82,11 @@ class IRMetric:
 
     @staticmethod
     def _is_relevant(hyp, ref):
-        # TODO 是否相关需要进行进一步的判断。或者作出限制。对于需要检索表的情况，也需要进一步说明
         hyp_code = str(do_code_to_index(hyp['technology_standard_code']))
         ref_code = str(do_code_to_index(ref['technology_standard_code']))
         hyp_subtitle = do_subtitle_format(hyp["technology_standard_subtitle"])
         ref_subtitle = do_subtitle_format(ref["technology_standard_subtitle"])
-        if hyp_code is not None and ref_code is not None and hyp_subtitle is not None and ref_subtitle is not None \
-            and hyp_code == ref_code \
-                and hyp_subtitle == ref_subtitle:
+        if hyp_code == ref_code and hyp_subtitle == ref_subtitle:
             return 1
         else:
             return 0
@@ -104,10 +112,8 @@ class IRMetric:
         ))
         for i, hyp in enumerate(hyps):
             for j, ref in enumerate(refs):
-                hyp_snippet = ' '.join(
-                    tokenize(preprocess_text(hyp['snippet'])))
-                ref_snippet = ' '.join(
-                    tokenize(preprocess_text(ref['snippet'])))
+                hyp_snippet = generate_rouge_text(hyp["snippet"])
+                ref_snippet = generate_rouge_text(ref["snippet"])
                 rouge_matrix[i, j] = rouge_score(hyp_snippet, ref_snippet)
         rouge_matrix = rouge_matrix * relevant_matrix
         return rouge_matrix
@@ -139,62 +145,36 @@ class IRMetric:
 
     @staticmethod
     def _get_recall(relevant_matrix) -> Tuple[float, List]:
-        """计算召回率
-
-        改进算法，可以适应ref中存在两个ref的subtitle相同的情况。
-
-        Args:
-            relevant_matrix ([type]): [description]
-
-        Returns:
-            Tuple[float, List]: [description]
         """
-        scores = []
+        用全排列的方法来做
+        注意ref的候选答案大于5个的时候，只取5。
+        """
+        n_hyps = relevant_matrix.shape[0]
+        n_refs = relevant_matrix.shape[1]
+        n = min(n_hyps, n_refs)  # n_hyp是小于等于5的
         projections = []
-        def recursive(score, hyp_ixs, ref_ixs, projection):
-            if hyp_ixs == [] or ref_ixs == []:
-                projections.append(projection)
-                scores.append(score)
-            for i, hyp_ix in enumerate(hyp_ixs):
-                for j, ref_ix in enumerate(ref_ixs):
-                    if relevant_matrix[hyp_ix, ref_ix] > 0:
-                        recursive(
-                            score + 1, 
-                            hyp_ixs[:i]+hyp_ixs[i+1:],
-                            ref_ixs[:j]+ref_ixs[j+1:],
-                            projection+[(hyp_ix, ref_ix,)]
-                        )
-                    else:
-                        recursive(
-                            score,
-                            hyp_ixs[:i]+hyp_ixs[i+1:],
-                            ref_ixs[:j]+ref_ixs[j+1:],
-                            copy.deepcopy(projection)
-                        )
-        recursive(0, list(range(relevant_matrix.shape[0])), list(range(relevant_matrix.shape[1])), [])
-        max_score = max(scores)
-        r_projections = [projection for score, projection in zip(scores, projections) if score == max_score]
-        return max_score / relevant_matrix.shape[1], r_projections
-
-    @staticmethod
-    def _get_recall_bak(relevant_matrix) -> Tuple[float, List]:
-        """[summary]
-
-        Args:
-            relevant_matrix ([type]): [description]
-
-        Returns:
-            score (float): 对应的分数
-            projections (List[List[Tuple[int, int]]]): 在最大分数下，hyp到ref的映射。外层list是因为可能有多组。
-        """
-        score = 0
-        projections = [[]]
-        # 采用下面这个循环，是基于任意两个ref的subtitle不一样的假设。
-        for ref_ix in range(relevant_matrix.shape[1]):
-            for hyp_ix in range(relevant_matrix.shape[0]):
-                if relevant_matrix[hyp_ix, ref_ix].sum() > 0:
-                    projection = [e.append((hyp_ix, ref_ix,)) for e in projections]
-        score = len(projections[0]) / relevant_matrix.shape[1]
+        scores = []
+        max_score = 0
+        ix = 0
+        for ref_comb in combinations(list(range(n_refs)), n):
+            for ref_perm in permutations(ref_comb):
+                for hyp_comb in combinations(list(range(n_hyps)), n):
+                    score = 0
+                    projection = []
+                    # 上面的操作已经保证了hyp_perm和ref_perm的元素都小于或等于5
+                    for hyp_ix, ref_ix in zip(hyp_comb, ref_perm):
+                        tmp_score = relevant_matrix[hyp_ix, ref_ix]
+                        if tmp_score > 0:
+                            projection.append((hyp_ix, ref_ix))
+                            score += 1
+                    max_score = max(score, max_score)
+                    if score >= max_score:
+                        projections.append(projection)
+                        scores.append(score)
+        if max_score == 0:
+            return 0, []
+        projections = [projection for score, projection in zip(scores, projections) if score == max_score]
+        score = max_score / min(n_refs, 5)
         return score, projections
 
     def match_snippets(self, projections: List[Tuple[int, int]], hyp: Dict, ref: Dict) -> List[Dict]:

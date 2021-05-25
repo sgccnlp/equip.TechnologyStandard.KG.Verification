@@ -10,19 +10,20 @@
 """
 from typing import Tuple, List, Dict
 
-from helper import rouge_score, preprocess_text, tokenize, snippet_projection, do_subtitle_format, do_code_to_index, argument_empty_process
+from helper import rouge_score, snippet_projection, do_subtitle_format, do_code_to_index, argument_empty_process, generate_rouge_text
 import json
 
 FAULT_ID = "-1"
 
 class QAMetric:
-    def __init__(self, ref_file):
+    def __init__(self, ref_file, debug=False):
         self.answer_func = {
             '数字类': self._num_score,
             '判断类': self._judge_score,
             '抽取类': self._extr_score,
             '统计类': self._stat_score
         }
+        self.debug = debug
         self.refs = {}
         with open(ref_file, encoding='utf8') as fp:
             for line in fp:
@@ -48,19 +49,33 @@ class QAMetric:
         Returns:
             Dict: [description]
             mode: int: 表示是否需要进行比较。即在没有匹配的id、数字类型、完全答错的情况下，是不需要比较的。
-                0表示可以比较，(参考答案不是数字类，且答对了)
-                1表示是参考答案是数字类, 所以不用比较，
-                2表示参考答案不是数字类，且回答答错了，无法比
-                3表示没有和hyp匹配的ref id
+                0 表示可以比较，(参考答案不是数字类，且答对了)
+                1 表示是参考答案是数字类, 所以不用比较，
+                2 表示参考答案不是数字类，且回答答错了，无法比
+                3 表示没有和hyp匹配的ref id
+                4 表示出现了没有捕获的异常
         """
-        if hyp["id"] not in refs.keys():
-            return {"score": 0, "mode": 3, "matched_snippet": {}}
+        if self.debug:
+            if hyp["id"] not in refs.keys():
+                return {"score": 0, "mode": 3, "matched_snippet": []}
+            else:
+                _id = hyp["id"]
+                ref = refs[hyp["id"]]
+                hyp = hyp["results"][0]
+                score, mode, matched_snippet = self._get_q_score(hyp, ref)
+                return {"score": score, "mode": mode, "matched_snippet": matched_snippet}
         else:
-            _id = hyp["id"]
-            ref = refs[hyp["id"]]
-            hyp = hyp["results"][0]
-            score, mode, matched_snippet = self._get_q_score(hyp, ref)
-            return {"score": score, "mode": mode, "matched_snippet": matched_snippet}
+            try:
+                if hyp["id"] not in refs.keys():
+                    return {"score": 0, "mode": 3, "matched_snippet": []}
+                else:
+                    _id = hyp["id"]
+                    ref = refs[hyp["id"]]
+                    hyp = hyp["results"][0]
+                    score, mode, matched_snippet = self._get_q_score(hyp, ref)
+                    return {"score": score, "mode": mode, "matched_snippet": matched_snippet}
+            except:
+                return {"score": 0, "mode": 4, "matched_snippet": []}
 
     def _get_q_score(self, hyp, ref) -> Tuple[float, int, List[Dict]]:
         """返回最大分数和对应的判据的对比
@@ -132,9 +147,7 @@ class QAMetric:
         ref_code = str(do_code_to_index(ref['technology_standard_code']))
         hyp_subtitle = do_subtitle_format(hyp["technology_standard_subtitle"])
         ref_subtitle = do_subtitle_format(ref["technology_standard_subtitle"])
-        if hyp_code is not None and ref_code is not None and hyp_subtitle is not None and ref_subtitle is not None \
-            and hyp_code == ref_code \
-                and hyp_subtitle == ref_subtitle:
+        if hyp_code == ref_code and hyp_subtitle == ref_subtitle:
             return self.answer_func[hyp['answer_type']](hyp, ref)
         else:
             return -1
@@ -160,14 +173,12 @@ class QAMetric:
             else:
                 return num
 
-
         def process_none_unit(unit):
             none_unit = "none"
             if unit is None or unit.strip() == "":
                 return none_unit
             else:
                 return unit
-
 
         h_answer = hyp['answer']
         h_num = process_none_num(h_answer["num"])
@@ -186,8 +197,8 @@ class QAMetric:
 
         kwarg_score = self.calculate_kwarg_score(h_argument, r_kwargs)
         
-        h_answer = ' '.join(tokenize(preprocess_text(h_argument)))
-        r_answer = ' '.join(tokenize(preprocess_text(r_argument)))
+        h_answer = generate_rouge_text(h_argument)
+        r_answer = generate_rouge_text(r_argument)
         return kwarg_score * rouge_score(h_answer, r_answer)
 
     def _stat_score(self, hyp, r):
@@ -213,18 +224,17 @@ class QAMetric:
         if h_num != r_num:
             return 0
         else:
-            h_argument = ' '.join(tokenize(preprocess_text(h_argument)))
-            r_argument = ' '.join(tokenize(preprocess_text(r_argument)))
+            h_argument = generate_rouge_text(h_argument)
+            r_argument = generate_rouge_text(r_argument)
             return kwarg_score * rouge_score(h_argument, r_argument)
 
     def _judge_score(self, hyp, r):
         def process_judgement(judgement):
-            if judgement != "是" or judgement != "否":
+            if judgement != "是" and judgement != "否":
                 return "none_judgement"
             else:
                 return judgement
 
-        
         h_answer= hyp['answer']
         h_tf = process_judgement(h_answer["judgement"])
         h_argument = argument_empty_process(h_answer["argument"])
@@ -237,8 +247,8 @@ class QAMetric:
 
         if r_tf != h_tf:
             return 0
-        h_argument = ' '.join(tokenize(preprocess_text(h_argument)))
-        r_argument = ' '.join(tokenize(preprocess_text(r_argument)))
+        h_argument = generate_rouge_text(h_argument)
+        r_argument = generate_rouge_text(r_argument)
         return kwarg_score * rouge_score(h_argument, r_argument)
 
     @staticmethod
@@ -252,6 +262,7 @@ class QAMetric:
             if kwarg in hyp:
                 n_right += 1 
         return n_right / n_kwargs
+
 
 if __name__ == "__main__":
     hyp_file = 'data/qa/hyps.json'

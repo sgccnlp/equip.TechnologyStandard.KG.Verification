@@ -1,0 +1,18 @@
+{
+  "id": "extr0001",
+  "track": 1002,
+  "question_type": "基础类",
+  "question": "有载分接开关的型式试验",
+  "answer_type": "抽取类",
+  "results": [
+    {
+      "answer": "5.2型式试验\n下列型式试验是在相关的有载分接开关的最终研制的样品上或等效的组成部件上进行的。所谓等效的组成部件是指制造单位已表明只用这些组成部件替代 完整的有载分接开关后，其试验条件及试验结果不受影响。\n— 触头温升试验（见５．２．）１； \n— 切换试验（见５．２．２）； 　　　　\n— 短路电流试验（见５．２．　３）；　　\n— 过渡阻抗试验（见 ５．２．４） 　",
+      "technology_standard_code": "",
+      "technology_standard_name": "分接开关第1部分：性能要求和试验方法",
+      "technology_standard_subtitle": [
+        "5.2"
+      ],
+      "answer_type": "抽取类"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "judge0001",
+  "track": 1002,
+  "question_type": "推理类",
+  "question": "能否采用击穿电压为25kV的未经处理的变压器油？",
+  "answer_type": "判断类",
+  "results": [
+    {
+      "answer": {
+        "argument": "",
+        "judgement": "否"
+      },
+      "technology_standard_code": "GB 2536-2011",
+      "technology_standard_name": "电工流体 变压器和开关用的未使用过的矿物绝缘油",
+      "technology_standard_subtitle": [
+        "7"
+      ],
+      "answer_type": "判断类"
+    }
+  ]
+}

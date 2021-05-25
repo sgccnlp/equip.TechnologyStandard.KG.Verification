@@ -1,0 +1,36 @@
+{
+  "id": "aa11",
+  "query": "运输 加速度",
+  "results": [
+    {
+      "snippet": "5.7.4.2 运输中的加速度\n变压器应设计、制造成能在各个方向承受至少3g连续加速度而无损坏，可采用基于连续加速度的静态力计算来证明。",
+      "technology_standard_code": "GB 1094.1-2013",
+      "technology_standard_name": "电力变压器 第1部分总则",
+      "technology_standard_subtitle": "5.7.4.2"
+    },
+    {
+      "snippet": "5.7.4.2 运输中的加速度\n如果制造方不负责运输,且运输中的加速度可能超过3g,则询价时应对加速度和发生的频度进行 规定。如果用户规定了更高的加速度，则制造方应用计算来证明符合要求。",
+      "technology_standard_code": "",
+      "technology_standard_name": "电力变压器 第1部分总则",
+      "technology_standard_subtitle": "5.7.4.2"
+    },
+    {
+      "snippet": "8.2.3应满足运输尺寸、重量及公路运输时最大倾斜度不超过15°等运输条件的要求；当冲撞加速度不大于3 g时，应无任何松动、变形和损坏。",
+      "technology_standard_code": null,
+      "technology_standard_name": "1000kV单相油浸式自耦电力变压器技术规范",
+      "technology_standard_subtitle": "8.2.3"
+    },
+    {
+      "snippet": "8.2.3电抗器应满足运输尺寸、质量及公路运输时最大倾斜度不超过15°等运输条件的要求；当运输中的冲撞加速度不大于3g时，应无任何松动、变形和损坏；应保证电抗器到现场后不吊罩检查即可投入 运行。",
+      "technology_standard_code": "GB/T 24844-2018",
+      "technology_standard_name": "1000kV交流系统用油浸式并联电抗器技术规范",
+      "technology_standard_subtitle": null
+    },
+    {
+      "snippet": "10.3.4电抗器在X、Y、Z三个方向应能安全地承受3.0g加速度的冲击力，电抗器运输过程中应安装三 维冲撞记录仪。公路运输时，应允许有15°的倾角。",
+      "technology_standard_code": "DL/T 271-2012",
+      "technology_standard_name": "330kV～750kV油浸式并联电抗器使用技术条件",
+      "technology_standard_subtitle": ""
+    }
+  ]
+}

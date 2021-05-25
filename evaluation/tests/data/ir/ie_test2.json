@@ -1,0 +1,36 @@
+{
+  "id": "aa11",
+  "query": "运输 加速度",
+  "results": [
+    {
+      "snippet": "5.7.4.2 运输中的加速度\n变压器应设计、制造成能在各个方向承受至少3g连续加速度而无损坏，可采用基于连续加速度的静态力计算来证明。",
+      "technology_standard_code": "GB 1094.1-2013",
+      "technology_standard_name": "电力变压器 第1部分总则",
+      "technology_standard_subtitle": "5.7.4.2"
+    },
+    {
+      "snippet": "",
+      "technology_standard_code": "GB 1094.1-2013",
+      "technology_standard_name": "电力变压器 第1部分总则",
+      "technology_standard_subtitle": "5.7.4.2"
+    },
+    {
+      "snippet": null,
+      "technology_standard_code": "GB/T 24843-2018",
+      "technology_standard_name": "1000kV单相油浸式自耦电力变压器技术规范",
+      "technology_standard_subtitle": "8.2.3"
+    },
+    {
+      "snippet": " ",
+      "technology_standard_code": "GB/T 24844-2018",
+      "technology_standard_name": "1000kV交流系统用油浸式并联电抗器技术规范",
+      "technology_standard_subtitle": "8.2.3"
+    },
+    {
+      "snippet": "。",
+      "technology_standard_code": "DL/T 271-2012",
+      "technology_standard_name": "330kV～750kV油浸式并联电抗器使用技术条件",
+      "technology_standard_subtitle": "10.3.4"
+    }
+  ]
+}

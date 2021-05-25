@@ -2,6 +2,11 @@ from flask import Flask, request
 import json
 from ir_metric import IRMetric
 from qa_metric import QAMetric
+from pathlib import Path
+
+
+profile_dir = "./tests/benchmark/"
+benchmark = True  # 生产时需要设为False
 
 
 ir_ref_file = "data/ir/refs.json"
@@ -12,6 +17,12 @@ qa_metric = QAMetric(qa_ref_file)
 
 
 app = Flask(__name__)
+if benchmark:
+    from werkzeug.middleware.profiler import ProfilerMiddleware
+    profile_dir = Path(profile_dir)
+    if not profile_dir.is_dir():
+        profile_dir.mkdir(parents=True)
+    app.wsgi_app = ProfilerMiddleware(app.wsgi_app, profile_dir=str(profile_dir))
 
 
 @app.route("/ir", methods=["POST"])

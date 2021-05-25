@@ -1,0 +1,21 @@
+{
+  "id": "num0001",
+  "track": 1002,
+  "question": "1000kV单相油浸式变压器在1.1倍相电压下无线电干扰电压不应大于多少？",
+  "question_type": "基础类",
+  "answer_type": "数字类",
+  "results": [
+    {
+      "answer": {
+        "num": "",
+        "unit": "uv"
+      },
+      "answer_type": "数字类",
+      "technology_standard_code": "GB/T 24843-2018",
+      "technology_standard_name": "1000kV单相油浸式自耦电力变压器技术规范",
+      "technology_standard_subtitle": [
+        "5.7"
+      ]
+    }
+  ]
+}

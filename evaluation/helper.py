@@ -4,6 +4,11 @@ from rouge import Rouge
 import numpy as np
 import json
 
+
+NULL_CODE = "null_code"
+NULL_SUBTITLE = "null_subtitle"
+EMPTY_STRING = "empty_string"
+
 rouge_wo_e = Rouge(exclusive=False)
 rouge_w_e = Rouge()
 
@@ -17,11 +22,10 @@ code_to_index = json.load(open("config/code_to_index.json"))
 
 
 def do_code_to_index(code):
-    ODD_CODE = "NULL0321"
     if not isinstance(code, str):
-        return ODD_CODE
+        return NULL_CODE
     code = code.strip()
-    return code_to_index.get(code, ODD_CODE)
+    return code_to_index.get(code, NULL_CODE)
 
 def strQ2B(ustring):
     """全角转半角"""
@@ -36,8 +40,6 @@ def strQ2B(ustring):
         rstring += chr(inside_code)
     return rstring
 
-# def do_subtitle_format(subtitle):
-#     return subtitle
 
 def do_subtitle_format(subtitle):
     """对子标题的简单处理
@@ -51,7 +53,7 @@ def do_subtitle_format(subtitle):
         [type]: [description]
     """
     if subtitle is None:
-        return "none"
+        return NULL_SUBTITLE
     subtitle = str(subtitle)
     r_subtitle = ""
     for x in subtitle:
@@ -69,7 +71,7 @@ def do_subtitle_format(subtitle):
                 x = "."
             r_subtitle += x
     if r_subtitle == "":
-        return "none"
+        return NULL_SUBTITLE
     return r_subtitle
 
 
@@ -91,11 +93,15 @@ def rouge_score(hyp, ref):
         rouge_l_p + rouge_l_r)
     return 0.2 * rouge_1 + 0.4 * rouge_2 + 0.4 * rouge_l
 
+
 def argument_empty_process(string):
-    empty_string = "答案为空"
-    if string is None or string == "":
-        return empty_string
+    """判断string是否为空字符串
+
+    """
+    if string is None or string.strip() == "":
+        return EMPTY_STRING
     return str(string)
+
 
 def preprocess_text(text):
     """在计算rouge前，对text的一些处理
@@ -123,26 +129,25 @@ def preprocess_text(text):
 
 def tokenize(text):
     """
-    TODO 中文直接按照字符切词。但是英文字符、数字字符等是否需要按照一定的规则呢？
 
     只区分中文和其他。其他包括英文，希腊字母，数字等等。
     关于标点的处理，在preprocess中已经处理了。
     """
     # 首先根据空格进行切分
-    result_segs: List[str] = ['']
+    result_segs: List[str] = []
     segs = text.split()
     for seg in segs:
-        is_last_chinese_or_new_seg = True
+        is_last_chinese_or_init_segs = True
         for ch in seg:
             if is_chinese(ch):
                 result_segs.append(ch)
-                is_last_chinese_or_new_seg = True
+                is_last_chinese_or_init_segs = True
             else:
-                if is_last_chinese_or_new_seg:
+                if is_last_chinese_or_init_segs:
                     result_segs.append(ch)
                 else:
                     result_segs[-1] += ch
-                is_last_chinese_or_new_seg = False
+                is_last_chinese_or_init_segs = False
     result_segs = [seg for seg in result_segs if seg != ""]
     if result_segs == [" "] or result_segs == [] or result_segs == [""]:
         return [" "]
@@ -200,6 +205,18 @@ def snippet_projection(hyp: List[str], ref: List[str]) -> Dict[str, List]:
             i = i - 1
             j = j - 1
     return int(matrix[-1, -1]), hyp_seq[::-1], ref_seq[::-1]
+
+
+def generate_rouge_text(text) -> str:
+    """生成用于rouge评分的文本
+
+    主要是对于一些情形的（例如空文本等）文本直接使用rouge评分函数可能报错。
+    """
+    text = argument_empty_process(text)
+    if text == EMPTY_STRING:
+        return " "
+    text = ' '.join(tokenize(preprocess_text(text)))
+    return text
 
 
 if __name__ == "__main__":

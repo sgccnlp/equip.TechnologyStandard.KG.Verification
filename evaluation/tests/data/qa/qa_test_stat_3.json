@@ -1,0 +1,21 @@
+{
+  "id": "stat0001",
+  "answer_type": "统计类",
+  "track": 1002,
+  "question": "变压器用片式散热器片宽有哪些尺寸？",
+  "question_type": "统计类",
+  "results": [
+    {
+      "answer": {
+        "num": "5",
+        "argument": ""
+      },
+      "technology_standard_code": "JB/T 5347-2013",
+      "technology_standard_name": "变压器用片式散热器",
+      "technology_standard_subtitle": [
+        "5.1"
+      ],
+      "answer_type": "统计类"
+    }
+  ]
+}
