@@ -20,7 +20,7 @@ http://ip:port?id=QA01001&anwser_type=数字类&question=新投运的220kV变压
         {
             "answer_type":"数字类",
             "answer": {
-                "num": 48,
+                "num": "48",
                 "unit": "小时",
             },
             "technology_standard_code":"GB 50150-2016",
