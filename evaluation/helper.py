@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Set
 from rouge import Rouge
 
 import numpy as np
@@ -6,7 +6,7 @@ import json
 
 
 NULL_CODE = "null_code"
-NULL_SUBTITLE = "null_subtitle"
+NULL_SUBTITLE = set()
 EMPTY_STRING = "empty_string"
 
 rouge_wo_e = Rouge(exclusive=False)
@@ -41,7 +41,7 @@ def strQ2B(ustring):
     return rstring
 
 
-def do_subtitle_format(subtitle):
+def do_subtitle_format(subtitles) -> Set[str]:
     """对子标题的简单处理
 
     包括去掉中间的空白字符、全角转半角、去掉非法字符feff、转换中文句号为小数点.
@@ -52,27 +52,34 @@ def do_subtitle_format(subtitle):
     Returns:
         [type]: [description]
     """
-    if subtitle is None:
+    def _process_one(subtitles):
+        r_subtitle = ""
+        for x in subtitle:
+            # 过滤空白字符
+            if x.strip() == "":
+                pass
+            # 过滤奇怪字符feff
+            elif x == "\ufeff":
+                pass
+            else:
+                # 全角转半角
+                x = strQ2B(x)
+                # 替换句号
+                if x == "。":
+                    x = "."
+                r_subtitle += x
+        return r_subtitle
+
+    if subtitles is None:
         return NULL_SUBTITLE
-    subtitle = str(subtitle)
-    r_subtitle = ""
-    for x in subtitle:
-        # 过滤空白字符
-        if x.strip() == "":
-            pass
-        # 过滤奇怪字符feff
-        elif x == "\ufeff":
-            pass
-        else:
-            # 全角转半角
-            x = strQ2B(x)
-            # 替换句号
-            if x == "。":
-                x = "."
-            r_subtitle += x
-    if r_subtitle == "":
-        return NULL_SUBTITLE
-    return r_subtitle
+    if isinstance(subtitles, str):
+        subtitles = [subtitles]
+    r_subtitles = set()
+    for subtitle in subtitles:
+        subtitle = _process_one(subtitle)
+        if subtitle != "":
+            r_subtitles.add(subtitle)
+    return r_subtitles
 
 
 def is_chinese(ch):
@@ -91,6 +98,8 @@ def rouge_score(hyp, ref):
     rouge_l_r = scores_w_e['rouge-l']['r']
     rouge_l = 0 if rouge_l_p == 0 and rouge_l_r == 0 else 2 * rouge_l_p * rouge_l_r / (
         rouge_l_p + rouge_l_r)
+    if len(ref.split()) < 2:
+        return (0.2 * rouge_1 + 0.4 * rouge_l) / 0.6
     return 0.2 * rouge_1 + 0.4 * rouge_2 + 0.4 * rouge_l
 
 
