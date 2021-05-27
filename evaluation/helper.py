@@ -5,6 +5,8 @@ import numpy as np
 import json
 import re
 
+from my_rouge.my_rouge import MyRouge
+
 
 NULL_CODE = "null_code"
 NULL_SUBTITLE = set()
@@ -12,6 +14,7 @@ EMPTY_STRING = "empty_string"
 
 rouge_wo_e = Rouge(exclusive=False)
 rouge_w_e = Rouge()
+my_rouge = MyRouge()
 
 PUNCTIONS = [
     "。", "，", "·", "、", "《", "》", "！", "？", "：", "；", "“", "”", "‘", "’", "（",
@@ -40,7 +43,6 @@ def do_code_format(code):
     """
     new_code = ''
     bcode = strQ2B(code)
-    print(bcode)
     for ch in bcode.lower():
         p = r'[0-9a-z]'
         if re.match(p, ch):
@@ -77,7 +79,7 @@ def do_subtitle_format(subtitles) -> Set[str]:
     Returns:
         [type]: [description]
     """
-    def _process_one(subtitles):
+    def _process_one(subtitle):
         r_subtitle = ""
         for x in subtitle:
             # 过滤空白字符
@@ -97,6 +99,9 @@ def do_subtitle_format(subtitles) -> Set[str]:
 
     if subtitles is None:
         return NULL_SUBTITLE
+    if not isinstance(subtitles, list):
+        return NULL_SUBTITLE
+    subtitles = [x for x in subtitles if isinstance(x, str)]
     if isinstance(subtitles, str):
         subtitles = [subtitles]
     r_subtitles = set()
@@ -115,14 +120,8 @@ def is_chinese(ch):
 
 
 def rouge_score(hyp, ref):
-    scores_wo_e = rouge_wo_e.get_scores(hyp, ref)[0]
-    scores_w_e = rouge_w_e.get_scores(hyp, ref)[0]
-    rouge_1 = scores_wo_e['rouge-1']['r']
-    rouge_2 = scores_wo_e['rouge-2']['r']
-    rouge_l_p = scores_w_e['rouge-l']['p']
-    rouge_l_r = scores_w_e['rouge-l']['r']
-    rouge_l = 0 if rouge_l_p == 0 and rouge_l_r == 0 else 2 * rouge_l_p * rouge_l_r / (
-        rouge_l_p + rouge_l_r)
+    scores = my_rouge.get_score(hyp, ref)
+    rouge_1, rouge_2, rouge_l = scores['rouge-1'], scores['rouge-2'], scores['rouge-l']
     if len(ref.split()) < 2:
         return (0.2 * rouge_1 + 0.4 * rouge_l) / 0.6
     return 0.2 * rouge_1 + 0.4 * rouge_2 + 0.4 * rouge_l
