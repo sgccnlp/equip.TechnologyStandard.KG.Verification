@@ -3,6 +3,7 @@ from rouge import Rouge
 
 import numpy as np
 import json
+import re
 
 
 NULL_CODE = "null_code"
@@ -18,27 +19,51 @@ PUNCTIONS = [
     "|", "\\", "?", "`", "~"
 ]
 
-code_to_index = json.load(open("config/code_to_index.json"))
-
-
-def do_code_to_index(code):
-    if not isinstance(code, str):
-        return NULL_CODE
-    code = code.strip()
-    return code_to_index.get(code, NULL_CODE)
 
 def strQ2B(ustring):
     """全角转半角"""
     rstring = ""
     for uchar in ustring:
         inside_code=ord(uchar)
-        if inside_code == 12288:                              #全角空格直接转换            
-            inside_code = 32 
+        if inside_code == 12288:                              #全角空格直接转换
+            inside_code = 32
         elif (inside_code >= 65281 and inside_code <= 65374): #全角字符（除空格）根据关系转化
             inside_code -= 65248
 
         rstring += chr(inside_code)
     return rstring
+
+
+def do_code_format(code):
+    """
+    对code进行简单的处理，包括全角转半角，小写字母，只保留数字和字母
+    """
+    new_code = ''
+    bcode = strQ2B(code)
+    print(bcode)
+    for ch in bcode.lower():
+        p = r'[0-9a-z]'
+        if re.match(p, ch):
+            new_code += ch
+    return new_code
+
+
+def init_code_to_index(path):
+    code_to_index = json.load(open(path))
+    for code in list(code_to_index.keys()):
+        new_code = do_code_format(code)
+        code_to_index[new_code] = code_to_index[code]
+    return code_to_index
+
+
+code_to_index = init_code_to_index("config/code_to_index.json")
+
+
+def do_code_to_index(code):
+    if not isinstance(code, str):
+        return NULL_CODE
+    code = do_code_format(code)
+    return code_to_index.get(code, NULL_CODE)
 
 
 def do_subtitle_format(subtitles) -> Set[str]:
