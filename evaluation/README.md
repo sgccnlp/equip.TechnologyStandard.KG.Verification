@@ -46,7 +46,20 @@ line = fp.readline()
 r = requests.post(url, data=line.encode('utf8'))
 print(r.text)
 ```
-
+## 评测脚本更新
+### 2021-05-26 问答数字类问题更新，答案中num从数字类型变更为字符串类型。
+```
+# before
+"answer": {
+    "num": 48,
+    ...
+}
+# now
+"answer": {
+    "num": "48",
+    ...
+}
+```
 ## 备注
 有疑问请联系开发者　或直接在 issue里提问
 
