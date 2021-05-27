@@ -3,17 +3,27 @@ import json
 from ir_metric import IRMetric
 from qa_metric import QAMetric
 from pathlib import Path
+import time
 
 
 profile_dir = "./tests/benchmark/"
-benchmark = True  # 生产时需要设为False
+benchmark = False # 生产时需要设为False
 
 
 ir_ref_file = "data/ir/refs.json"
 qa_ref_file = "data/qa/refs.json"
 
-ir_metric = IRMetric(ir_ref_file)
-qa_metric = QAMetric(qa_ref_file)
+ir_metric = IRMetric(ir_ref_file, debug=True)
+qa_metric = QAMetric(qa_ref_file, debug=True)
+
+
+def f(n):
+    if n == 1:
+        return 1
+    if n == 2:
+        return 1
+    if n > 2:
+        return f(n-1) + f(n-2)
 
 
 app = Flask(__name__)
@@ -23,6 +33,14 @@ if benchmark:
     if not profile_dir.is_dir():
         profile_dir.mkdir(parents=True)
     app.wsgi_app = ProfilerMiddleware(app.wsgi_app, profile_dir=str(profile_dir))
+
+
+@app.route("/bm", methods=["POST"])
+def bm():
+    a = request.get_data()
+    print('get')
+    print(f(100))
+    return a
 
 
 @app.route("/ir", methods=["POST"])
