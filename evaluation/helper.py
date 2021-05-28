@@ -99,11 +99,11 @@ def do_subtitle_format(subtitles) -> Set[str]:
 
     if subtitles is None:
         return NULL_SUBTITLE
+    if isinstance(subtitles, str):
+        subtitles = [subtitles]
     if not isinstance(subtitles, list):
         return NULL_SUBTITLE
     subtitles = [x for x in subtitles if isinstance(x, str)]
-    if isinstance(subtitles, str):
-        subtitles = [subtitles]
     r_subtitles = set()
     for subtitle in subtitles:
         subtitle = _process_one(subtitle)
