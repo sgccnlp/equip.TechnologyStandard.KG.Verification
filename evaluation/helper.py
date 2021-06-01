@@ -1,5 +1,4 @@
 from typing import List, Dict, Set
-from rouge import Rouge
 
 import numpy as np
 import json
@@ -9,11 +8,10 @@ from my_rouge.my_rouge import MyRouge
 
 
 NULL_CODE = "null_code"
-NULL_SUBTITLE = set()
+NULL_SUBTITLES = set()
+NULL_SUBTITLE = "null_subtitle"
 EMPTY_STRING = "empty_string"
 
-rouge_wo_e = Rouge(exclusive=False)
-rouge_w_e = Rouge()
 my_rouge = MyRouge()
 
 PUNCTIONS = [
@@ -69,6 +67,36 @@ def do_code_to_index(code):
 
 
 def do_subtitle_format(subtitles) -> Set[str]:
+    """条款号的处理
+
+    这个版本采用类似标准号的白名单式处理，可以兼容附录等情况。
+
+    Args:
+        subtitles ([type]): [description]
+
+    Returns:
+        Set[str]: [description]
+    """
+    def _process_one(subtitle: str):
+        # try:
+        subtitle = str(subtitle)
+        p = r'[a-z.]'
+        subtitle = ''.join(re.findall(p, subtitle.lower()))
+        return subtitle
+        # except:
+        #     return NULL_SUBTITLE
+    if subtitles is None:
+        return NULL_SUBTITLES
+    if isinstance(subtitles, str):
+        subtitles = [subtitles]
+    if not isinstance(subtitles, list):
+        return NULL_SUBTITLES
+    subtitles = [x for x in subtitles if isinstance(x, str) and x.strip() != ""]
+    r_subtitles = set(_process_one(subtitle) for subtitle in subtitles)
+    return r_subtitles
+
+
+def do_subtitle_format_bak(subtitles) -> Set[str]:
     """对子标题的简单处理
 
     包括去掉中间的空白字符、全角转半角、去掉非法字符feff、转换中文句号为小数点.
@@ -98,11 +126,11 @@ def do_subtitle_format(subtitles) -> Set[str]:
         return r_subtitle
 
     if subtitles is None:
-        return NULL_SUBTITLE
+        return NULL_SUBTITLES
     if isinstance(subtitles, str):
         subtitles = [subtitles]
     if not isinstance(subtitles, list):
-        return NULL_SUBTITLE
+        return NULL_SUBTITLES
     subtitles = [x for x in subtitles if isinstance(x, str)]
     r_subtitles = set()
     for subtitle in subtitles:

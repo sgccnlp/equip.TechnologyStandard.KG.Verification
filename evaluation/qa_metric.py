@@ -188,7 +188,7 @@ class QAMetric:
         r_num = process_none_num(r_answer["num"])
         r_unit = process_none_unit(r_answer["unit"])
 
-        return 1 if r_num == h_num and r_unit == h_unit else 0
+        return 1 if r_num == h_num and r_unit.lower() == h_unit.lower() else 0
 
     def _extr_score(self, hyp, r):
         h_argument = argument_empty_process(hyp["answer"])
