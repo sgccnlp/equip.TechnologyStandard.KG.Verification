@@ -9,7 +9,6 @@ from my_rouge.my_rouge import MyRouge
 
 NULL_CODE = "null_code"
 NULL_SUBTITLES = set()
-NULL_SUBTITLE = "null_subtitle"
 EMPTY_STRING = "empty_string"
 
 my_rouge = MyRouge()
@@ -80,7 +79,7 @@ def do_subtitle_format(subtitles) -> Set[str]:
     def _process_one(subtitle: str):
         # try:
         subtitle = str(subtitle)
-        p = r'[a-z.]'
+        p = r'[a-z.0-9]'
         subtitle = ''.join(re.findall(p, subtitle.lower()))
         return subtitle
         # except:
@@ -92,7 +91,8 @@ def do_subtitle_format(subtitles) -> Set[str]:
     if not isinstance(subtitles, list):
         return NULL_SUBTITLES
     subtitles = [x for x in subtitles if isinstance(x, str) and x.strip() != ""]
-    r_subtitles = set(_process_one(subtitle) for subtitle in subtitles)
+    r_subtitles = list(_process_one(subtitle) for subtitle in subtitles)
+    r_subtitles = set(x for x in r_subtitles if x != "")
     return r_subtitles
 
 
