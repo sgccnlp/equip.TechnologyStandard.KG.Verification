@@ -171,14 +171,14 @@ class QAMetric:
             if num is None or num.strip() == "":
                 return none_num
             else:
-                return num
+                return num.replace(' ', '').replace('\u3000', '')
 
         def process_none_unit(unit):
             none_unit = "none"
             if unit is None or unit.strip() == "":
                 return none_unit
             else:
-                return unit
+                return unit.replace(' ', '').replace('\u3000', '')
 
         h_answer = hyp['answer']
         h_num = process_none_num(h_answer["num"])
